@@ -43,7 +43,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include <errno.h>
 #include <time.h>
 
-char  *mymembuf;
+char  *mymembuf = NULL;
 uint8_t  MusicPtr[72000];
 
 
@@ -78,102 +78,102 @@ int BYTEVERSION_1_3 = 1; // for 1.3 demos (Not compatible)
 
 int BYTEVERSION			= 119; // xDuke v19.7
 
-short global_random;
-short neartagsector, neartagwall, neartagsprite;
+short global_random = 0;
+short neartagsector = 0, neartagwall = 0, neartagsprite = 0;
 
-int32_t gc,neartaghitdist,lockclock,max_player_health,max_armour_amount,max_ammo_amount[MAX_WEAPONS];
+int32_t gc = 0,neartaghitdist = 0,lockclock = 0,max_player_health = 0,max_armour_amount = 0,max_ammo_amount[MAX_WEAPONS] = {};
 
 // int32_t temp_data[MAXSPRITES][6];
-struct weaponhit hittype[MAXSPRITES];
-short spriteq[1024],spriteqloc,spriteqamount=64;
+struct weaponhit hittype[MAXSPRITES] = {};
+short spriteq[1024] = {},spriteqloc = 0,spriteqamount=64;
 
-struct animwalltype animwall[MAXANIMWALLS];
-short numanimwalls;
-int32_t *animateptr[MAXANIMATES], animategoal[MAXANIMATES], animatevel[MAXANIMATES], animatecnt;
+struct animwalltype animwall[MAXANIMWALLS] = {};
+short numanimwalls = 0;
+int32_t *animateptr[MAXANIMATES] = {}, animategoal[MAXANIMATES] = {}, animatevel[MAXANIMATES] = {}, animatecnt = 0;
 // int32_t oanimateval[MAXANIMATES];
-short animatesect[MAXANIMATES];
-int32_t msx[2048],msy[2048];
-short cyclers[MAXCYCLERS][6],numcyclers;
+short animatesect[MAXANIMATES] = {};
+int32_t msx[2048] = {},msy[2048] = {};
+short cyclers[MAXCYCLERS][6] = {},numcyclers = 0;
 
-char  fta_quotes[NUMOFFIRSTTIMEACTIVE][64];
+char  fta_quotes[NUMOFFIRSTTIMEACTIVE][64] = {};
 
-uint8_t  tempbuf[2048];
-uint8_t packbuf[576];
+uint8_t  tempbuf[2048] = {};
+uint8_t packbuf[576] = {};
 
-char  buf[80];
+char  buf[80] = {};
 
-short camsprite;
-short mirrorwall[64], mirrorsector[64], mirrorcnt;
+short camsprite = 0;
+short mirrorwall[64] = {}, mirrorsector[64] = {}, mirrorcnt = 0;
 
-int current_menu;
+int current_menu = 0;
 
-uint8_t  betaname[80];
+uint8_t  betaname[80] = {};
 
-char level_names[44][33];
-char level_file_names[44][128];
-int32_t partime[44],designertime[44];
+char level_names[44][33] = {};
+char level_file_names[44][128] = {};
+int32_t partime[44] = {},designertime[44] = {};
 char  volume_names[4][33] = { "L.A. MELTDOWN", "LUNAR APOCALYPSE", "SHRAPNEL CITY", "" }; // Names are not in 1.3 con files. MUST be in code.
 char  skill_names[5][33] = { "PIECE OF CAKE", "LET'S ROCK", "COME GET SOME", "DAMN I'M GOOD", "" };
 
 volatile int32_t checksume;
-int32_t soundsiz[NUM_SOUNDS];
+int32_t soundsiz[NUM_SOUNDS] = {};
 
-short soundps[NUM_SOUNDS],soundpe[NUM_SOUNDS],soundvo[NUM_SOUNDS];
-uint8_t  soundm[NUM_SOUNDS],soundpr[NUM_SOUNDS];
-char  sounds[NUM_SOUNDS][14];
+short soundps[NUM_SOUNDS] = {},soundpe[NUM_SOUNDS] = {},soundvo[NUM_SOUNDS] = {};
+uint8_t  soundm[NUM_SOUNDS] = {},soundpr[NUM_SOUNDS] = {};
+char  sounds[NUM_SOUNDS][14] = {};
 
 short title_zoom;
 
-SAMPLE Sound[ NUM_SOUNDS ];
-SOUNDOWNER SoundOwner[NUM_SOUNDS][4];
+SAMPLE Sound[ NUM_SOUNDS ] = {};
+SOUNDOWNER SoundOwner[NUM_SOUNDS][4] = {};
 
-uint8_t  numplayersprites,earthquaketime;
+uint8_t  numplayersprites = 0,earthquaketime = 0;
 
-int32_t fricxv,fricyv;
-struct player_orig po[MAXPLAYERS];
-struct player_struct ps[MAXPLAYERS];
-struct user_defs ud;
+int32_t fricxv = 0,fricyv = 0;
+struct player_orig po[MAXPLAYERS] = {};
+struct player_struct ps[MAXPLAYERS] = {};
+struct user_defs ud = {};
 
-uint8_t  pus, pub;
-uint8_t  syncstat, syncval[MAXPLAYERS][MOVEFIFOSIZ];
-int32_t syncvalhead[MAXPLAYERS], syncvaltail, syncvaltottail;
+uint8_t  pus = 0, pub = 0;
+uint8_t  syncstat = 0, syncval[MAXPLAYERS][MOVEFIFOSIZ] = {};
+int32_t syncvalhead[MAXPLAYERS] = {}, syncvaltail = 0, syncvaltottail = 0;
 
-input sync[MAXPLAYERS], loc;
+input sync[MAXPLAYERS] = {}, loc = {};
+input recsync[RECSYNCBUFSIZ] = {};
+int32_t avgfvel = 0, avgsvel = 0, avgavel = 0, avghorz = 0, avgbits = 0;
+
+
+input inputfifo[MOVEFIFOSIZ][MAXPLAYERS] = {};
 input recsync[RECSYNCBUFSIZ];
-int32_t avgfvel, avgsvel, avgavel, avghorz, avgbits;
 
-
-input inputfifo[MOVEFIFOSIZ][MAXPLAYERS];
-input recsync[RECSYNCBUFSIZ];
-
-int32_t movefifosendplc;
+int32_t movefifosendplc = 0;
 
   //Multiplayer syncing variables
-short screenpeek;
-int32_t movefifoend[MAXPLAYERS];
+short screenpeek = 0;
+int32_t movefifoend[MAXPLAYERS] = {};
 
 
     //Game recording variables
 
-uint8_t  playerreadyflag[MAXPLAYERS],ready2send;
-uint8_t  playerquitflag[MAXPLAYERS];
-int32_t vel, svel, angvel, horiz, ototalclock, respawnactortime=768, respawnitemtime=768, groupfile;
+uint8_t  playerreadyflag[MAXPLAYERS] = {},ready2send = 0;
+uint8_t  playerquitflag[MAXPLAYERS] = {};
+int32_t vel = 0, svel = 0, angvel = 0, horiz = 0, ototalclock = 0, respawnactortime=768, respawnitemtime=768, groupfile;
 
-int32_t script[MAXSCRIPTSIZE],*scriptptr,*insptr,*labelcode,labelcnt;
-int32_t*actorscrptr[MAXTILES],*parsing_actor;
-char  *label,*textptr,error,warning ;
-uint8_t killit_flag;
-uint8_t  *music_pointer;
-uint8_t  actortype[MAXTILES];
+int32_t script[MAXSCRIPTSIZE] = {},*scriptptr = NULL,*insptr = NULL,*labelcode = NULL,labelcnt = 0;
+int32_t*actorscrptr[MAXTILES] = {},*parsing_actor = NULL;
+char  *label = NULL,*textptr = NULL,error = NULL,warning = NULL;
+uint8_t killit_flag = 0;
+uint8_t  *music_pointer = NULL;
+uint8_t  actortype[MAXTILES] = {};
 
 
-uint8_t  display_mirror,typebuflen;
-char typebuf[41];
+uint8_t  display_mirror = 0,typebuflen = 0;
+char typebuf[41] = {};
 
-char  music_fn[4][11][13];
-uint8_t music_select;
-char  env_music_fn[4][13];
-uint8_t  rtsplaying;
+char  music_fn[4][11][13] = {};
+uint8_t music_select = 0;
+char  env_music_fn[4][13] = {};
+uint8_t  rtsplaying = 0;
 
 
 short weaponsandammosprites[15] = {
@@ -194,38 +194,40 @@ short weaponsandammosprites[15] = {
         FREEZEAMMO
     };
 
-int32_t impact_damage;
+int32_t impact_damage = 0;
 
         //GLOBAL.C - replace the end "my's" with this
-int32_t myx, omyx, myxvel, myy, omyy, myyvel, myz, omyz, myzvel;
-short myhoriz, omyhoriz, myhorizoff, omyhorizoff;
-short myang, omyang, mycursectnum, myjumpingcounter,frags[MAXPLAYERS][MAXPLAYERS];
+int32_t myx = 0, omyx = 0, myxvel = 0, myy = 0, omyy = 0, myyvel = 0, myz = 0, omyz = 0, myzvel = 0;
+short myhoriz = 0, omyhoriz = 0, myhorizoff = 0, omyhorizoff = 0;
+short myang = 0, omyang = 0, mycursectnum = 0, myjumpingcounter = 0,frags[MAXPLAYERS][MAXPLAYERS] = {};
 
-uint8_t  myjumpingtoggle, myonground, myhardlanding, myreturntocenter;
-int8_t multiwho, multipos, multiwhat, multiflag;
+uint8_t  myjumpingtoggle = 0, myonground = 0, myhardlanding = 0, myreturntocenter = 0;
+int8_t multiwho = 0, multipos = 0, multiwhat = 0, multiflag = 0;
 
-int32_t fakemovefifoplc,movefifoplc;
-int32_t myxbak[MOVEFIFOSIZ], myybak[MOVEFIFOSIZ], myzbak[MOVEFIFOSIZ];
-int32_t myhorizbak[MOVEFIFOSIZ],dukefriction = 0xcc00, show_shareware;
+int32_t fakemovefifoplc = 0,movefifoplc = 0;
+int32_t myxbak[MOVEFIFOSIZ] = {}, myybak[MOVEFIFOSIZ] = {}, myzbak[MOVEFIFOSIZ] = {};
+int32_t myhorizbak[MOVEFIFOSIZ] = {},dukefriction = 0xcc00, show_shareware = 0;
 
-short myangbak[MOVEFIFOSIZ];
+short myangbak[MOVEFIFOSIZ] = {};
 char  myname[2048] = "XDUKE";
-uint8_t  camerashitable,freezerhurtowner=0,lasermode;
+uint8_t  camerashitable = 0,freezerhurtowner = 0,lasermode = 0;
 // CTW - MODIFICATION
 // uint8_t  networkmode = 255, movesperpacket = 1,gamequit = 0,playonten = 0,everyothertime;
-uint8_t  networkmode = 255, movesperpacket = 1,gamequit = 0,everyothertime;
+uint8_t  networkmode = 255, movesperpacket = 1,gamequit = 0,everyothertime = 0;
 // CTW END - MODIFICATION
-int32_t numfreezebounces=3,rpgblastradius,pipebombblastradius,tripbombblastradius,shrinkerblastradius,morterblastradius,bouncemineblastradius,seenineblastradius;
-STATUSBARTYPE sbar;
+int32_t numfreezebounces=3,rpgblastradius = 0,pipebombblastradius = 0,tripbombblastradius = 0,shrinkerblastradius = 0,morterblastradius = 0,bouncemineblastradius = 0,seenineblastradius = 0;
+STATUSBARTYPE sbar = {};
 
-int32_t myminlag[MAXPLAYERS], mymaxlag, otherminlag, bufferjitter = 1;
-short numclouds,clouds[128],cloudx[128],cloudy[128];
+int32_t myminlag[MAXPLAYERS] = {}, mymaxlag = 0, otherminlag = 0, bufferjitter = 1;
+short numclouds = 0,clouds[128] = {},cloudx[128] = {},cloudy[128] = {};
 int32_t cloudtotalclock = 0,totalmemory = 0;
 int32_t numinterpolations = 0, startofdynamicinterpolations = 0;
-int32_t oldipos[MAXINTERPOLATIONS];
-int32_t bakipos[MAXINTERPOLATIONS];
-int32_t *curipos[MAXINTERPOLATIONS];
+int32_t oldipos[MAXINTERPOLATIONS] = {};
+int32_t bakipos[MAXINTERPOLATIONS] = {};
+int32_t *curipos[MAXINTERPOLATIONS] = {};
 
+int _argc = 0;
+char  **  _argv = NULL;
 
 // portability stuff.  --ryan.
 // A good portion of this was ripped from GPL'd Rise of the Triad.  --ryan.
@@ -777,7 +779,7 @@ void SwapIntelShortArray(short *s, int num)
  */
  
 #if UNIX
-uint8_t  *strlwr(uint8_t  *s)
+/*uint8_t  *strlwr(uint8_t  *s)
 {
 	uint8_t  *p = s;
 	
@@ -799,7 +801,7 @@ uint8_t  *strupr(uint8_t  *s)
 	}
 	
 	return s;
-}
+}*/
 	
 uint8_t  *itoa(int value, uint8_t  *string, int radix)
 {

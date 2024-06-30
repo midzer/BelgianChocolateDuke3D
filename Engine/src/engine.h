@@ -154,7 +154,23 @@ int clipinsidebox(int32_t x, int32_t y, int16_t wallnum, int32_t walldist);
     extern int32_t artsize , cachesize ;
     extern int32_t tilefileoffs[MAXTILES];
     extern int32_t totalclocklock;
+    extern uint8_t lastPalette[768];
+    extern uint8_t *pic;
+    extern int32_t numlumps;
+    extern int32_t lastvisinc;
+    extern uint8_t vidoption;
+    extern int32_t xres, yres, bytesperline, imageSize, maxpages, numpages, activepage;
+    extern uint8_t* frameplace;
+    extern int32_t ydimen;
 
+    //The frambuffer address
+    extern uint8_t* frameoffset;
+    extern uint8_t  *screen;
+    extern int32_t buffermode;
+    extern uint8_t  permanentupdate;
+    extern int32_t horizycent;
+
+    extern int32_t oxdimen, oviewingrange, oxyaspect;
 #ifdef __cplusplus
 }
 #endif

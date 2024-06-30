@@ -42,6 +42,32 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern int MV_ErrorCode;
 
+extern double *MV_FooBuffer;
+extern int MV_BufferSize;
+extern int MV_SampleSize;
+extern int MV_MaxVolume;
+extern int MV_ReverbDelay;
+extern int MV_MixRate;
+extern int MV_Channels;
+
+extern int MV_LeftVolume;
+extern int MV_RightVolume;
+extern int MV_MaxVolume;
+
+extern char  *MV_MixDestination;
+extern uint32_t MV_MixPosition;
+extern int *MV_GLast, *MV_GPos, *MV_GVal;
+
+extern int MV_LeftVolume;
+extern int MV_RightVolume;
+extern int MV_MaxVolume;
+
+extern int MV_RightChannelOffset;
+extern int MV_SampleSize;
+extern int MV_Channels;
+
+extern int g_CV_CubicInterpolation;
+
 enum MV_Errors
    {
    MV_Warning = -2,
@@ -106,6 +132,6 @@ int   MV_Init( int soundcard, int MixRate, int Voices, int numchannels,
 int   MV_Shutdown( void );
 
 //CRITICAL_SECTION reverbCS;
-SDL_mutex* reverbMutex;
+extern SDL_mutex* reverbMutex;
 
 #endif

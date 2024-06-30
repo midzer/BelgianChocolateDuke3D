@@ -1,14 +1,6 @@
 #include "multivoc.h"
 #include "_multivc.h"
 
-extern double *MV_FooBuffer;
-extern int MV_BufferSize;
-extern int MV_SampleSize;
-extern int MV_MaxVolume;
-extern int MV_ReverbDelay;
-extern int MV_MixRate;
-extern int MV_Channels;
-
 static double * reverbBuffer = 0;
 static int delay = 0, CurrAddr;
 

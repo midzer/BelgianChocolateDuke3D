@@ -26,10 +26,8 @@
 
 
 
-char game_dir[512];
-
 //The multiplayer module in game.dll needs direct access to the crc32 (sic).
-int32_t groupefil_crc32[MAXGROUPFILES];
+int32_t groupefil_crc32[MAXGROUPFILES] = {};
 
 
 // A typical GRP index entry:
@@ -59,7 +57,7 @@ typedef struct grpSet_s{
 static grpSet_t grpSet;
 
 
-uint8_t         crcBuffer[ 1 << 20]     ;
+static uint8_t         crcBuffer[ 1 << 20]     ;
 int32_t initgroupfile(const char  *filename)
 {
 	uint8_t         buf[16]                 ;
@@ -417,7 +415,7 @@ int32_t klseek(int32_t handle, int32_t offset, int whence){
 	
 }
 
-#if defined(__APPLE__) || defined(__linux__)
+#if defined(__APPLE__) || defined(__linux__) || defined(__EMSCRIPTEN__)
 int32_t filelength(int32_t fd){
     struct stat stats;
     fstat(fd, &stats);

@@ -14,17 +14,11 @@
 #include "draw.h"
 #include "filesystem.h"
 
-char  artfilename[20];
+static char  artfilename[20];
+static int32_t numTiles;
+static int32_t artversion;
 
-tile_t tiles[MAXTILES];
-
-int32_t numTiles;
-
-int32_t artversion;
-
-uint8_t  *pic = NULL;
-
-uint8_t  gotpic[(MAXTILES+7)>>3];
+uint8_t gotpic[(MAXTILES+7)>>3] = {};
 
 void setviewtotile(short tilenume, int32_t tileWidth, int32_t tileHeight)
 {

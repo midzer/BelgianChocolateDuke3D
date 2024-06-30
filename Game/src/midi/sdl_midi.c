@@ -19,7 +19,7 @@
  from it and store it in RAM.
 */
 #define KILOBYTE (1024*1024)
-uint8_t musicDataBuffer[100 * KILOBYTE];
+static uint8_t musicDataBuffer[100 * KILOBYTE];
 
 char  *MUSIC_ErrorString(int ErrorNumber)
 {

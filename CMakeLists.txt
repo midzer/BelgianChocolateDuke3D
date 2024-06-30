@@ -39,7 +39,8 @@ endif()
 if (UNIX)
 		
 	add_definitions(-DUNIX)
-	add_compile_options("-Wall")
+	add_compile_options(-flto -O3 -fno-rtti -fno-exceptions -Wno-int-conversion)
+	add_link_options(-sUSE_SDL_MIXER=2)
 
 	# Duke 3D source code is not at all thought out for strict aliasing.
 	# Really not! It's full of dangerous pointer casting.
@@ -70,7 +71,7 @@ else()
 	# On Linux we have to rely on the package system (e.g. apt-get).
 	# Otherwise we are likely to be missing some SDL-mixer components (e.g. proper MIDI sound support).
 	find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)
-	find_package(SDL2Mixer REQUIRED)
+	find_package(SDL2Mixer)
 	set(SDL2_ALL_LIBRARIES ${SDL2_LIBRARIES} ${SDL2Mixer_LIBRARIES})
 endif()
 

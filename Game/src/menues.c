@@ -49,10 +49,9 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 extern SDL_Surface *surface;
 extern short inputloc;
 extern int recfilep;
-extern uint8_t  vgacompatible;
 short probey=0,lastprobey=0,last_menu,globalskillsound=-1;
-short sh,onbar,buttonstat,deletespot;
-short last_zero,last_fifty,last_threehundred = 0;
+short sh = 0,onbar = 0,buttonstat = 0,deletespot = 0;
+static short last_zero,last_fifty,last_threehundred;
 static uint8_t  fileselect = 1, menunamecnt;
 static char menuname[256][17];
 
@@ -726,7 +725,7 @@ int saveplayer(int8_t spot)
 #define WHEELUP (buttonstat&8)
 #define WHEELDOWN (buttonstat&16)
 
-ControlInfo minfo;
+static ControlInfo minfo;
 
 int probe(int x,int y,int i,int n)
 {
@@ -1150,7 +1149,7 @@ void bar(int x,int y,short *p,short dainc,uint8_t  damodify,short s, short pa)
 #define MWINXY(X,OX,OY) rotatesprite( ( 320+(OX) )<<15, ( 200+(OY) )<<15,X,0,MENUSCREEN,-16,0,10+64,0,0,xdim-1,ydim-1)
 
 
-int32 volnum,levnum,plrskl,numplr;
+static int32 volnum,levnum,plrskl,numplr;
 short lastsavedpos = -1;
 
 void dispnames(void)
@@ -1251,7 +1250,7 @@ int getfilenames(char  kind[6])
 	}
 	while (_dos_findnext(&fileinfo) == 0);
 
-#elif (defined UNIX)
+#elif defined UNIX || defined(__EMSCRIPTEN__)
 
     DIR *dir;
     struct dirent *dent;

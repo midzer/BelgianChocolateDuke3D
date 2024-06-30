@@ -29,9 +29,10 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "engine.h"
 #include "soundefs.h"
 #include "sounds.h"
+#include "global.h"
 
-extern int32_t numenvsnds;
-uint8_t  actor_tog;
+uint8_t  actor_tog = 0;
+short otherp = 0;
 
 void updateinterpolations()  //Stick at beginning of domovethings
 {
@@ -1179,7 +1180,6 @@ void movedummyplayers(void)
 }
 
 
-short otherp;
 void moveplayers(void) //Players
 {
     short i , nexti;

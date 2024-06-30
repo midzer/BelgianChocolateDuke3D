@@ -175,7 +175,7 @@ extern uint32   CONTROL_JoyButtonState;
 // PROTOTYPES
 //
 //***************************************************************************
-struct _KeyMapping
+extern struct _KeyMapping
 {
 	boolean key_active;
 	kb_scancode key1;
@@ -184,8 +184,8 @@ struct _KeyMapping
 	/* other mappings go here */
 } KeyMapping[MAXGAMEBUTTONS];
 
-int32 MouseMapping[MAXMOUSEBUTTONS];
-int32 MouseDigitalAxeMapping[MAXMOUSEAXES][2];  // [axesX/Y][directionLeft/Right or directionUp/Down]
+extern int32 MouseMapping[MAXMOUSEBUTTONS];
+extern int32 MouseDigitalAxeMapping[MAXMOUSEAXES][2];  // [axesX/Y][directionLeft/Right or directionUp/Down]
 
 
 int  ACTION(int i);

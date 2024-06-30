@@ -38,17 +38,17 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "global.h"
 #include "file_lib.h"
 #include "util_lib.h"
+#include "engine.h"
 
 //=============
 // STATICS
 //=============
 
-int32 numlumps;
 static uint8_t  **lumpcache;
 static lumpinfo_t *lumpinfo;              // location of each lump on disk
 static boolean RTS_Started = false;
 
-uint8_t  lumplockbyte[11];
+uint8_t  lumplockbyte[11] = {};
 
 /*
 ============================================================================

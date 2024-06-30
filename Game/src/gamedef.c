@@ -37,12 +37,11 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "engine.h"
 #include "keyboard.h"
 #include "soundefs.h"
-
-extern short otherp;
+#include "global.h"
 
 static short total_lines,line_number;
 static uint8_t  checking_ifelse,parsing_state;
-char *last_used_text;
+static char *last_used_text;
 static short num_squigilly_brackets;
 static int32_t last_used_size;
 

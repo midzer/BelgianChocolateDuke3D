@@ -33,8 +33,8 @@ void CONSOLE_ClearUsedCommandList();
 void CONSOLE_RecalculateDirtyBuffer();
 
 // console argument tracker
-int argc;
-char  argv[MAX_CVAR_ARGS][MAX_CONSOLE_STRING_LENGTH];
+static int argc;
+static char  argv[MAX_CVAR_ARGS][MAX_CONSOLE_STRING_LENGTH];
 // Console entries, prepending linked list
 CONSOLEELEMENT *console_buffer = NULL;
 // Current viewed setion of the console
@@ -45,7 +45,7 @@ CONSOLEELEMENT *console_used_command_list = NULL;
 CONSOLEELEMENT *console_used_command_list_current = NULL;
 
 // dirty buffer
-char  dirty_buffer[MAX_CONSOLE_STRING_LENGTH];
+static char  dirty_buffer[MAX_CONSOLE_STRING_LENGTH];
 
 // dirty buffer control vars
 int console_cursor_pos = 0; //without spaces

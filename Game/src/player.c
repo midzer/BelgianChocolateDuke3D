@@ -37,8 +37,8 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "sounds.h"
 #include "soundefs.h"
 
-int32 turnheldtime; //MED
-int32 lastcontroltime; //MED
+static int32 turnheldtime; //MED
+static int32 lastcontroltime; //MED
 
 void setpal(struct player_struct *p)
 {
@@ -1221,8 +1221,6 @@ uint8_t  animateknuckles(short gs,short snum)
 
 
 
-int32_t lastvisinc;
-
 void displaymasks(short snum)
 {
     short p;
@@ -1298,7 +1296,7 @@ uint8_t  animateaccess(short gs,short snum)
     return 1;
 }
 
-short fistsign;
+static short fistsign;
 
 void displayweapon(short snum)
 {
@@ -4094,8 +4092,8 @@ static int32_t fdmatrix[12][12] =
 static int32_t goalx[MAXPLAYERS], goaly[MAXPLAYERS], goalz[MAXPLAYERS];
 static int32_t goalsect[MAXPLAYERS], goalwall[MAXPLAYERS], goalsprite[MAXPLAYERS];
 static int32_t goalplayer[MAXPLAYERS], clipmovecount[MAXPLAYERS];
-short searchsect[MAXSECTORS], searchparent[MAXSECTORS];
-uint8_t  dashow2dsector[(MAXSECTORS+7)>>3];
+static short searchsect[MAXSECTORS], searchparent[MAXSECTORS];
+static uint8_t  dashow2dsector[(MAXSECTORS+7)>>3];
 void computergetinput(int32_t snum, input *syn)
 {
     int32_t i, j, k, l, x1, y1, z1, x2, y2, z2, x3, y3, z3, dx, dy;

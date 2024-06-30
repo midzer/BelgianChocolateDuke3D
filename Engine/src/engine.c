@@ -27,7 +27,7 @@
 #include "tiles.h"
 
 int32_t stereowidth = 23040, stereopixelwidth = 28, ostereopixelwidth = -1;
-int32_t stereomode = 0, visualpage, activepage, whiteband, blackband;
+int32_t stereomode = 0, whiteband, blackband;
 uint8_t  oa1, o3c2, ortca, ortcb, overtbits, laststereoint;
 
 #include "display.h"
@@ -51,6 +51,63 @@ int32_t oxdimen = -1, oviewingrange = -1, oxyaspect = -1;
 /* used to be static. --ryan. */
 int32_t curbrightness = 0;
 
+short headspritestat[MAXSTATUS+1] = {};
+short prevspritestat[MAXSPRITES] = {};
+short nextspritestat[MAXSPRITES] = {};
+short headspritesect[MAXSTATUS+1] = {};
+short prevspritesect[MAXSPRITES] = {};
+short nextspritesect[MAXSPRITES] = {};
+short sintable[2048] = {};
+int32_t windowx1 = 0, windowy1 = 0, windowx2 = 0, windowy2 = 0;
+short pskyoff[MAXPSKYTILES] = {};
+short pskybits = 0;
+int32_t parallaxyscale = 0;
+int32_t validmodecnt = 0;
+short validmode[256] = {};
+int32_t validmodexdim[256] = {}, validmodeydim[256] = {};
+uint8_t  parallaxtype = 0;
+int32_t numframes = 0;
+short numpalookups = 0;
+int32_t ylookup[MAXYDIM+1] = {};
+int32_t parallaxyoffs = 0;
+uint8_t showinvisibility = 0;
+uint8_t lastPalette[768] = {};
+uint8_t *pic = NULL;
+int32_t numlumps = 0;
+int32_t lastvisinc = 0;
+
+uint8_t vidoption = 0;
+int32_t xres = 0, yres = 0, bytesperline = 0, imageSize = 0, maxpages = 0, numpages = 0, activepage = 0;
+uint8_t* frameplace = NULL;
+int32_t ydimen = 0;
+
+uint8_t* frameoffset = NULL;
+uint8_t  *screen = NULL;
+int32_t buffermode = 0;
+uint8_t  permanentupdate = 0;
+int32_t horizycent = 0;
+
+short numsectors = 0;
+short numwalls = 0;
+int32_t randomseed = 0;
+int32_t yxaspect = 0;
+
+int32_t xdim = 0, ydim = 0;
+
+short startumost[MAXXDIM] = {};
+short startdmost[MAXXDIM] = {};
+
+uint8_t show2dsector[(MAXSECTORS+7)>>3] = {};
+uint8_t show2dwall[(MAXWALLS+7)>>3] = {};
+uint8_t show2dsprite[(MAXSPRITES+7)>>3] = {};
+
+uint8_t palette[768] = {};
+int32_t visibility = 0;
+uint8_t automapping = 0;
+
+int32_t spritesortcnt = 0;
+spritetype tsprite[MAXSPRITESONSCREEN] = {};
+
 /* Textured Map variables */
 static uint8_t  globalpolytype;
 static short *dotp1[MAXYDIM], *dotp2[MAXYDIM];
@@ -58,18 +115,19 @@ static short *dotp1[MAXYDIM], *dotp2[MAXYDIM];
 static char  tempbuf[MAXWALLS];
 
 int32_t ebpbak, espbak;
-intptr_t slopalookup[16384];
+static intptr_t slopalookup[16384];
 
 /*
  * !!! used to be static. If we ever put the original setgamemode() back, this
  * !!! can be made static again.  --ryan.
  */
 uint8_t  permanentlock = 255;
-int32_t  mapversion;
+static int32_t  mapversion;
 
-uint8_t  picsiz[MAXTILES], tilefilenum[MAXTILES];
-int32_t lastageclock;
-int32_t tilefileoffs[MAXTILES];
+uint8_t  picsiz[MAXTILES] = {}, tilefilenum[MAXTILES] = {};
+static int32_t lastageclock;
+tile_t tiles[MAXTILES] = {};
+int32_t tilefileoffs[MAXTILES] = {};
 
 int32_t artsize = 0, cachesize = 0;
 
@@ -87,12 +145,14 @@ int32_t pow2long[32] =
     16777216L,33554432L,67108864L,134217728L,
     268435456L,536870912L,1073741824L,2147483647L,
 };
-int32_t reciptable[2048], fpuasm;
+int32_t reciptable[2048] = {}, fpuasm = 0;
+int32_t volatile totalclock = 0;
 
-char  kensmessage[128];
+static char  kensmessage[128];
 
-uint8_t  britable[16][64];
-uint8_t  textfont[1024], smalltextfont[1024];
+static uint8_t  britable[16][64];
+static uint8_t  textfont[1024], smalltextfont[1024];
+static int32_t viewingrange;
 
 
 
@@ -116,7 +176,7 @@ typedef struct pvWall_s{
 } pvWall_t;
 
 // Potentially Visible walls are stored in this stack.
-pvWall_t pvWalls[MAXWALLSB];
+static pvWall_t pvWalls[MAXWALLSB];
 
 
 
@@ -155,19 +215,19 @@ static int32_t spritesz[MAXSPRITESONSCREEN];
 static spritetype *tspriteptr[MAXSPRITESONSCREEN];
 
 //FCS: (up-most pixel on column x that can still be drawn to)
-short umost[MAXXDIM+1];
+static short umost[MAXXDIM+1];
 
 //FCS: (down-most pixel +1 on column x that can still be drawn to)
-short dmost[MAXXDIM+1];
+static short dmost[MAXXDIM+1];
 
-int16_t bakumost[MAXXDIM+1], bakdmost[MAXXDIM+1];
-short uplc[MAXXDIM+1], dplc[MAXXDIM+1];
+int16_t bakumost[MAXXDIM+1] = {}, bakdmost[MAXXDIM+1] = {};
+static short uplc[MAXXDIM+1], dplc[MAXXDIM+1];
 static int16_t uwall[MAXXDIM+1], dwall[MAXXDIM+1];
 static int32_t swplc[MAXXDIM+1], lplc[MAXXDIM+1];
 static int32_t swall[MAXXDIM+1], lwall[MAXXDIM+4];
-int32_t xdimen = -1, xdimenrecip, halfxdimen, xdimenscale, xdimscale;
-int32_t wx1, wy1, wx2, wy2, ydimen;
-int32_t viewoffset;
+int32_t xdimen = -1, xdimenrecip = 0, halfxdimen = 0, xdimenscale = 0, xdimscale = 0;
+static int32_t wx1, wy1, wx2, wy2;
+static int32_t viewoffset;
 
 static int32_t rxi[8], ryi[8], rzi[8], rxi2[8], ryi2[8], rzi2[8];
 static int32_t xsi[8], ysi[8];
@@ -175,33 +235,42 @@ static int32_t xsi[8], ysi[8];
 /* used to be static. --ryan. */
 int32_t *horizlookup=0, *horizlookup2=0, horizycent;
 
-int32_t globalposx, globalposy, globalposz, globalhoriz;
-int16_t globalang, globalcursectnum;
-int32_t globalpal, cosglobalang, singlobalang;
-int32_t cosviewingrangeglobalang, sinviewingrangeglobalang;
-uint8_t  *globalpalwritten;
-int32_t globaluclip, globaldclip, globvis = 0;
-int32_t globalvisibility, globalhisibility, globalpisibility, globalcisibility;
-uint8_t  globparaceilclip, globparaflorclip;
+static int32_t globalposx, globalposy, globalposz, globalhoriz;
+static int16_t globalang, globalcursectnum;
+static int32_t globalpal, cosglobalang, singlobalang;
+static int32_t cosviewingrangeglobalang, sinviewingrangeglobalang;
+uint8_t  *globalpalwritten = NULL;
+static int32_t globaluclip, globaldclip, globvis = 0;
+static int32_t globalvisibility, globalhisibility, globalpisibility, globalcisibility;
+static uint8_t  globparaceilclip, globparaflorclip;
 
-int32_t xyaspect, viewingrangerecip;
+static int32_t xyaspect, viewingrangerecip;
 
-int32_t asm1, asm4;
-intptr_t asm2, asm3;
+int32_t asm1 = 0, asm4 = 0;
+intptr_t asm2 = NULL, asm3 = NULL;
 
 
-int32_t vplce[4], vince[4];
-intptr_t bufplce[4];
+int32_t vplce[4] = {}, vince[4] = {};
+intptr_t bufplce[4] = {};
 
-uint8_t*  palookupoffse[4];
+uint8_t*  palookupoffse[4] = {};
+uint8_t  *palookup[MAXPALOOKUPS] = {};
 
-uint8_t  globalxshift, globalyshift;
-int32_t globalxpanning, globalypanning, globalshade;
-int16_t globalpicnum, globalshiftval;
-int32_t globalzd, globalyscale, globalorientation;
-uint8_t* globalbufplc;
-int32_t globalx1, globaly1, globalx2, globaly2, globalx3, globaly3, globalzx;
-int32_t globalx, globaly, globalz;
+sectortype sector[MAXSECTORS] = {};
+walltype wall[MAXWALLS] = {};
+spritetype sprite[MAXSPRITES] = {};
+
+static uint8_t  globalxshift, globalyshift;
+static int32_t globalxpanning, globalypanning, globalshade;
+int16_t globalpicnum = 0, globalshiftval = 0;
+static int32_t globalzd, globalyscale, globalorientation;
+static uint8_t* globalbufplc;
+static int32_t globalx1, globaly1, globalx2, globaly2, globalzx;
+static int32_t globalx, globaly, globalz;
+
+int32_t globalx3 = 0, globaly3 = 0;
+
+int32_t parallaxvisibility = 0;
 
 //FCS:
 // Those two variables are using during portal flooding:
@@ -215,7 +284,7 @@ static uint8_t  tablesloaded = 0;
 int32_t pageoffset, ydim16, qsetmode = 0;
 int32_t startposx, startposy, startposz;
 int16_t startang, startsectnum;
-int16_t pointhighlight, linehighlight, highlightcnt;
+static int16_t pointhighlight, linehighlight, highlightcnt;
 static int32_t lastx[MAXYDIM];
 uint8_t  paletteloaded = 0;
 
@@ -249,26 +318,26 @@ static permfifotype permfifo[MAXPERMS];
 static int32_t permhead = 0, permtail = 0;
 
 //FCS: Num walls to potentially render.
-short numscans ;
+static short numscans;
 
-short numbunches;
+static short numbunches;
 
 //FCS: Number of colums to draw. ALWAYS set to the screen dimension width.
-short numhits;
+static short numhits;
 
 short editstatus = 0;
-short searchit;
-int32_t searchx = -1, searchy;                     /* search input  */
-short searchsector, searchwall, searchstat;     /* search output */
+static short searchit;
+int32_t searchx = -1, searchy = 0;                     /* search input  */
+static short searchsector, searchwall, searchstat;     /* search output */
 
-int32_t numtilefiles, artfil = -1, artfilnum, artfilplc;
+int32_t numtilefiles = 0, artfil = -1, artfilnum = 0, artfilplc = 0;
 
 static uint8_t  inpreparemirror = 0;
 static int32_t mirrorsx1, mirrorsy1, mirrorsx2, mirrorsy2;
 
-int32_t totalclocklock;
+int32_t totalclocklock = 0;
 
-uint16_t mapCRC;
+uint16_t mapCRC = 0;
 
 #include "draw.h"
 
@@ -3561,7 +3630,6 @@ static void initfastcolorlookup(int32_t rscale, int32_t gscale, int32_t bscale)
     colscan[26] = i;
 }
 
-extern uint8_t lastPalette[768];
 static void loadpalette(void)
 {
     int32_t k, fil;
@@ -3973,7 +4041,7 @@ static void dorotatesprite (int32_t sx, int32_t sy, int32_t z, short a, short pi
         by = (tileHeight<<16)-1-by;
     }
 
-    if ((vidoption == 1) && (origbuffermode == 0))
+    if (vidoption == 1)
     {
         if (dastat&128)
         {
@@ -4301,7 +4369,7 @@ static void dorotatesprite (int32_t sx, int32_t sy, int32_t z, short a, short pi
         }
     }
 
-    if ((vidoption == 1) && (dastat&128) && (origbuffermode == 0))
+    if (vidoption == 1 && dastat&128)
     {
         buffermode = obuffermode;
 
@@ -4736,9 +4804,9 @@ static void ceilspritehline (int32_t x2, int32_t y)
     int32_t x1, v, bx, by;
 
     /*
-     * x = x1 + (x2-x1)t + (y1-y2)u  ³  x = 160v
-     * y = y1 + (y2-y1)t + (x2-x1)u  ³  y = (scrx-160)v
-     * z = z1 = z2                   ³  z = posz + (scry-horiz)v
+     * x = x1 + (x2-x1)t + (y1-y2)u  ï¿½  x = 160v
+     * y = y1 + (y2-y1)t + (x2-x1)u  ï¿½  y = (scrx-160)v
+     * z = z1 = z2                   ï¿½  z = posz + (scry-horiz)v
      */
 
     x1 = lastx[y];
@@ -9030,11 +9098,11 @@ uint8_t  getpixel(int32_t x, int32_t y)
 
 /* MUST USE RESTOREFORDRAWROOMS AFTER DRAWING */
 int32_t setviewcnt = 0;
-int32_t bakvidoption[4];
-uint8_t* bakframeplace[4];
-int32_t bakxsiz[4], bakysiz[4];
-int32_t bakwindowx1[4], bakwindowy1[4];
-int32_t bakwindowx2[4], bakwindowy2[4];
+int32_t bakvidoption[4] = {};
+uint8_t* bakframeplace[4] = {};
+int32_t bakxsiz[4] = {}, bakysiz[4] = {};
+int32_t bakwindowx1[4] = {}, bakwindowy1[4] = {};
+int32_t bakwindowx2[4] = {}, bakwindowy2[4] = {};
 
 void setviewback(void)
 {

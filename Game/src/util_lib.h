@@ -40,10 +40,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
     extern "C" {
 #endif
 
-
-extern  int32    _argc;
-extern  char  **  _argv;
-
 void RegisterShutdownFunction( void (* shutdown) (void) );
 void   Error (int errorType, const char  *error, ...);
 

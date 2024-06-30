@@ -36,7 +36,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 // PRIMITIVE
 
 
-uint8_t  haltsoundhack;
+static uint8_t  haltsoundhack;
 short callsound(short sn,short whatsprite)
 {
     short i;

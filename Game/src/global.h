@@ -63,6 +63,10 @@ void Shutdown(void);
 int32_t MotoLong (int32_t l);
 int32_t IntelLong (int32_t l);
 
+extern short otherp;
+extern int32_t numenvsnds;
+extern uint8_t actor_tog;
+
 void Error (int errorType, const char *error, ...);
 
 #endif

@@ -470,11 +470,11 @@ void mvlineasm4(int32_t columnIndex, uint8_t* framebuffer)
 
 /* ---------------  SPRITE RENDERING METHOD (USED TO BE HIGHLY OPTIMIZED ASSEMBLY) ----------------------------*/
 
-const uint8_t * tspal;
-uint32_t tsmach_eax1;
-uint32_t adder;
-uint32_t tsmach_eax3;
-uint32_t tsmach_ecx;
+static uint8_t * tspal;
+static uint32_t tsmach_eax1;
+static uint32_t adder;
+static uint32_t tsmach_eax3;
+static uint32_t tsmach_ecx;
 void tsetupspritevline(const uint8_t * palette, int32_t i2, int32_t i3, int32_t i4, int32_t i5)
 {
 	tspal = palette;
@@ -699,9 +699,6 @@ void setupslopevlin(int32_t i1, intptr_t i2, int32_t i3)
     asm2 = c.i;
 }
 
-extern int32_t reciptable[2048];
-extern int32_t globalx3, globaly3;
-extern int32_t fpuasm;
 #define low32(a) (((a)&0xffffffff))
 #define high32(a) ((int)(((int64_t)(a)&(int64_t)0xffffffff00000000)>>32))
 

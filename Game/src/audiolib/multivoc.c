@@ -55,7 +55,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define IS_QUIET( vol ) ( ( vol ) == 0 )
 
 static int       MV_ReverbLevel;
-int       MV_ReverbDelay;
+int       MV_ReverbDelay = 0;
 static int       MV_ReverbTable = -1;
 
 //static signed short MV_VolumeTable[ MV_MaxVolume + 1 ][ 256 ];
@@ -82,7 +82,7 @@ static int MV_Silence    = SILENCE_8BIT;
 static int MV_SwapLeftRight = FALSE;
 
 static int MV_RequestedMixRate;
-int MV_MixRate;
+int MV_MixRate = 0;
 
 static int MV_BuffShift;
 
@@ -91,7 +91,7 @@ static int MV_FooMemory;
 
 static void* MV_BufferDescriptor;
 static int   MV_BufferEmpty[ NumberOfBuffers ];
-char *MV_MixBuffer[ NumberOfBuffers + 1 ];
+static char *MV_MixBuffer[ NumberOfBuffers + 1 ];
 double *MV_FooBuffer = NULL;
 
 static VoiceNode *MV_Voices = NULL;
@@ -108,18 +108,20 @@ static void ( *MV_MixFunction )( VoiceNode *voice);
 
 int MV_MaxVolume = 63;
 
-int *MV_GLast, *MV_GPos, *MV_GVal;
+int *MV_GLast = NULL, *MV_GPos = NULL, *MV_GVal = NULL;
 
 // char  *MV_HarshClipTable;
-char  *MV_MixDestination;
-int    MV_LeftVolume;
-int    MV_RightVolume;
+char  *MV_MixDestination = "";
+int    MV_LeftVolume = 0;
+int    MV_RightVolume = 0;
 int    MV_SampleSize = 1;
-int    MV_RightChannelOffset;
+int    MV_RightChannelOffset = 0;
 
-unsigned long MV_MixPosition;
+uint32_t MV_MixPosition = 0;
 
 int MV_ErrorCode = MV_Ok;
+
+SDL_mutex* reverbMutex = NULL;
 
 #define MV_SetErrorCode( status ) \
    MV_ErrorCode   = ( status );

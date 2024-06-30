@@ -26,18 +26,6 @@
 #define CLIPMASK0 (((1L)<<16)+1L)
 #define CLIPMASK1 (((256L)<<16)+64L)
 
-
-	/*
-     * Make all variables in BUILD.H defined in the ENGINE,
-	 *  and externed in GAME
-     * (dear lord.  --ryan.)
-     */
-#ifdef ENGINE
-	#define EXTERN
-#else
-	#define EXTERN extern
-#endif
-
 #pragma pack(1)
 
 /*
@@ -133,47 +121,55 @@ typedef struct
 
 #pragma pack()
 
-EXTERN sectortype sector[MAXSECTORS];
-EXTERN walltype wall[MAXWALLS];
-EXTERN spritetype sprite[MAXSPRITES];
+extern sectortype sector[MAXSECTORS];
+extern walltype wall[MAXWALLS];
+extern spritetype sprite[MAXSPRITES];
 
-EXTERN uint16_t mapCRC;
+extern uint16_t mapCRC;
 
-EXTERN int32_t spritesortcnt;
-EXTERN spritetype tsprite[MAXSPRITESONSCREEN];
+extern int32_t spritesortcnt;
+extern spritetype tsprite[MAXSPRITESONSCREEN];
 
-EXTERN uint8_t  vidoption;
-EXTERN int32_t xdim, ydim, numpages;
+extern uint8_t  vidoption;
+extern int32_t xdim, ydim, numpages;
 
 // Fast way to retrive the start of a column in the framebuffer, given a screenspace X coordinate.
-EXTERN int32_t ylookup[MAXYDIM+1];
+extern int32_t ylookup[MAXYDIM+1];
 
-EXTERN int32_t yxaspect, viewingrange;
+extern int32_t yxaspect;
 
-EXTERN int32_t validmodecnt;
-EXTERN short validmode[256];
-EXTERN int32_t validmodexdim[256], validmodeydim[256];
+extern int32_t validmodecnt;
+extern short validmode[256];
+extern int32_t validmodexdim[256], validmodeydim[256];
 
-EXTERN short numsectors, numwalls;
-EXTERN volatile int32_t totalclock;
-EXTERN int32_t numframes, randomseed;
-EXTERN short sintable[2048];
-EXTERN uint8_t  palette[768];
-EXTERN short numpalookups;
-EXTERN uint8_t  *palookup[MAXPALOOKUPS];
-EXTERN uint8_t  parallaxtype, showinvisibility;
-EXTERN int32_t parallaxyoffs, parallaxyscale;
-EXTERN int32_t visibility, parallaxvisibility;
+extern short numsectors, numwalls;
+extern volatile int32_t totalclock;
+extern int32_t numframes, randomseed;
+extern short sintable[2048];
+extern uint8_t  palette[768];
+extern short numpalookups;
+extern uint8_t  *palookup[MAXPALOOKUPS];
+extern uint8_t  parallaxtype, showinvisibility;
+extern int32_t parallaxyoffs, parallaxyscale;
+extern int32_t visibility, parallaxvisibility;
 
-EXTERN int32_t windowx1, windowy1, windowx2, windowy2;
-EXTERN short startumost[MAXXDIM], startdmost[MAXXDIM];
+extern int32_t windowx1, windowy1, windowx2, windowy2;
+extern short startumost[MAXXDIM], startdmost[MAXXDIM];
 
-EXTERN short pskyoff[MAXPSKYTILES], pskybits;
+extern short pskyoff[MAXPSKYTILES], pskybits;
 
-EXTERN short headspritesect[MAXSECTORS+1], headspritestat[MAXSTATUS+1];
-EXTERN short prevspritesect[MAXSPRITES], prevspritestat[MAXSPRITES];
-EXTERN short nextspritesect[MAXSPRITES], nextspritestat[MAXSPRITES];
+extern short headspritesect[MAXSECTORS+1], headspritestat[MAXSTATUS+1];
+extern short prevspritesect[MAXSPRITES], prevspritestat[MAXSPRITES];
+extern short nextspritesect[MAXSPRITES], nextspritestat[MAXSPRITES];
 
+extern uint8_t  show2dsector[(MAXSECTORS+7)>>3];
+extern uint8_t  show2dwall[(MAXWALLS+7)>>3];
+extern uint8_t  show2dsprite[(MAXSPRITES+7)>>3];
+extern uint8_t  automapping;
+
+extern int32_t reciptable[2048];
+extern int32_t globalx3, globaly3;
+extern int32_t fpuasm;
 
 
     /*
@@ -191,15 +187,11 @@ EXTERN short nextspritesect[MAXSPRITES], nextspritestat[MAXSPRITES];
 	 *    then in 3D mode, the walls and sprites that you see will show up the
 	 *    next time you flip to 2D mode.
      */
-EXTERN uint8_t  show2dsector[(MAXSECTORS+7)>>3];
-EXTERN uint8_t  show2dwall[(MAXWALLS+7)>>3];
-EXTERN uint8_t  show2dsprite[(MAXSPRITES+7)>>3];
-EXTERN uint8_t  automapping;
 
 
 
 //This is the bit vector that marks visited sector during portal flooding. Size is hence (MAXSECTORS / 8)
-EXTERN uint8_t  visitedSectors[(MAXSECTORS+7)>>3];
+static uint8_t  visitedSectors[(MAXSECTORS+7)>>3];
 
 /*************************************************************************
 POSITION VARIABLES:
@@ -219,13 +211,13 @@ SPRITE VARIABLES:
 	EXTERN short nextspritesect[MAXSPRITES], nextspritestat[MAXSPRITES];
 
 	Example: if the linked lists look like the following:
-		 здддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
-		 Ё      Sector lists:               Status lists:               Ё
-		 цдддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
-		 Ё  Sector0:  4, 5, 8             Status0:  2, 0, 8             Ё
-		 Ё  Sector1:  16, 2, 0, 7         Status1:  4, 5, 16, 7, 3, 9   Ё
-		 Ё  Sector2:  3, 9                                              Ё
-		 юдддддддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+		 О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫д©
+		 О©╫      Sector lists:               Status lists:               О©╫
+		 О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫д╢
+		 О©╫  Sector0:  4, 5, 8             Status0:  2, 0, 8             О©╫
+		 О©╫  Sector1:  16, 2, 0, 7         Status1:  4, 5, 16, 7, 3, 9   О©╫
+		 О©╫  Sector2:  3, 9                                              О©╫
+		 О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 	Notice that each number listed above is shown exactly once on both the
 		left and right side.  This is because any sprite that exists must
 		be in some sector, and must have some kind of status that you define.

@@ -47,25 +47,28 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 // extern int g_CV_SmoothMouseSensX;
 // extern int g_CV_SmoothMouseSensY;
 
-uint32   CONTROL_RudderEnabled;
-boolean  CONTROL_MousePresent;
-boolean  CONTROL_JoysPresent[ MaxJoys ];
-boolean  CONTROL_MouseEnabled;
-boolean  CONTROL_JoystickEnabled;
-byte     CONTROL_JoystickPort;
-uint32   CONTROL_MouseButtonState1;
-uint32   CONTROL_MouseButtonState2;
+uint32   CONTROL_RudderEnabled = 0;
+boolean  CONTROL_MousePresent = 0;
+boolean  CONTROL_JoysPresent[ MaxJoys ] = {};
+boolean  CONTROL_MouseEnabled = 0;
+boolean  CONTROL_JoystickEnabled = 0;
+byte     CONTROL_JoystickPort = 0;
+uint32   CONTROL_MouseButtonState1 = 0;
+uint32   CONTROL_MouseButtonState2 = 0;
 // FIX_00019: DigitalAxis Handling now supported. (cool for medkit use)
-uint32   CONTROL_MouseDigitalAxisState1;
-uint32   CONTROL_MouseDigitalAxisState2;
+static uint32   CONTROL_MouseDigitalAxisState1;
+static uint32   CONTROL_MouseDigitalAxisState2;
 //uint32   CONTROL_ButtonHeldState1;
 //uint32   CONTROL_ButtonHeldState2;
-uint32   CONTROL_JoyButtonState1;
-uint32   CONTROL_JoyButtonState2;
+static uint32   CONTROL_JoyButtonState1;
+static uint32   CONTROL_JoyButtonState2;
 
-uint32   CONTROL_JoyHatState1; //[MAXJOYHATS];
-uint32   CONTROL_JoyHatState2; //[MAXJOYHATS];
+static uint32   CONTROL_JoyHatState1; //[MAXJOYHATS];
+static uint32   CONTROL_JoyHatState2; //[MAXJOYHATS];
 
+struct _KeyMapping KeyMapping[MAXGAMEBUTTONS] = {};
+int32 MouseMapping[MAXMOUSEBUTTONS] = {};
+int32 MouseDigitalAxeMapping[MAXMOUSEAXES][2] = {};
 
 static short mouseButtons = 0;
 static short lastmousebuttons = 0;

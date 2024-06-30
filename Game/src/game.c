@@ -55,10 +55,11 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "control.h"
 #include "sounds.h"
 #include "soundefs.h"
+#include "cache.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <ctype.h>
 
 
 #define MINITEXT_BLUE	0
@@ -77,8 +78,8 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #define TIMERUPDATESIZ 32
 
 int32_t cameradist = 0, cameraclock = 0;
-uint8_t  playerswhenstarted;
-uint8_t  qe,cp;
+uint8_t  playerswhenstarted = 0;
+uint8_t  qe = 0,cp = 0;
 
 uint8_t  nHostForceDisableAutoaim = 0;
 
@@ -94,7 +95,7 @@ uint16_t g_bStun = 0;
 
 char confilename[128] = {"GAME.CON"};
 char boardfilename[128] = {0};
-uint8_t  waterpal[768], slimepal[768], titlepal[768], drealms[768], endingpal[768];
+uint8_t  waterpal[768] = {}, slimepal[768] = {}, titlepal[768] = {}, drealms[768] = {}, endingpal[768] = {};
 char  firstdemofile[80] = { '\0' };
 
 #define patchstatusbar(x1,y1,x2,y2)                                        \
@@ -106,21 +107,18 @@ char  firstdemofile[80] = { '\0' };
 
 void newint24( int errval, int ax, int bp, int si );
 
-int recfilep,totalreccnt;
-uint8_t  debug_on = 0,actor_tog = 0,memorycheckoveride=0;
-uint8_t *rtsptr;
+static int recfilep,totalreccnt;
+uint8_t  debug_on = 0,memorycheckoveride=0;
+static uint8_t *rtsptr;
 
 
-extern uint8_t  syncstate;
-extern int32 numlumps;
+uint8_t syncstate = 0;
 
 FILE *frecfilep = (FILE *)NULL;
 void pitch_test( void );
 
-uint8_t  restorepalette,screencapt,nomorelogohack;
+uint8_t  restorepalette = 0,screencapt = 0,nomorelogohack = 0;
 int sendmessagecommand = -1;
-
-extern int32_t lastvisinc;
 
 void timerhandler(void)
 {
@@ -344,7 +342,7 @@ void gamenumber(int32_t x,int32_t y,int32_t n,uint8_t  s)
 }
 
 
-char  recbuf[80];
+static char  recbuf[80];
 void allowtimetocorrecterrorswhenquitting(void)
 {
      int32_t i, j, oldtotalclock;
@@ -368,9 +366,9 @@ void allowtimetocorrecterrorswhenquitting(void)
 }
 
 #define MAXUSERQUOTES 4
-int32_t quotebot, quotebotgoal;
-short user_quote_time[MAXUSERQUOTES];
-char  user_quote[MAXUSERQUOTES][128];
+static int32_t quotebot, quotebotgoal;
+static short user_quote_time[MAXUSERQUOTES];
+static char  user_quote[MAXUSERQUOTES][128];
 // uint8_t  typebuflen,typebuf[41];
 
 static void adduserquote(char  *daquote)
@@ -3055,8 +3053,8 @@ void drawbackground(void)
 #define FOFTILE 13
 #define FOFTILEX 32
 #define FOFTILEY 32
-int32_t tempsectorz[MAXSECTORS];
-int32_t tempsectorpicnum[MAXSECTORS];
+static int32_t tempsectorz[MAXSECTORS];
+static int32_t tempsectorpicnum[MAXSECTORS];
 //short tempcursectnum;
 
 static void SE40_Draw(int spnum,int32_t x,int32_t y,int32_t z,short a,short h,int32_t smoothratio)
@@ -3575,7 +3573,7 @@ uint8_t  wallswitchcheck(short i)
 }
 
 
-int32_t tempwallptr;
+int32_t tempwallptr = 0;
 short spawn( short j, short pn )
 {
     short i, s, startwall, endwall, sect, clostest;
@@ -6130,7 +6128,7 @@ uint8_t  cheatquotes[NUMCHEATCODES][14] = {
 };
 
 
-uint8_t  cheatbuf[10],cheatbuflen;
+static uint8_t  cheatbuf[10],cheatbuflen;
 void cheats(void)
 {
     short ch, i, j, k, weapon;
@@ -6578,7 +6576,7 @@ void cheats(void)
 }
 
 
-int32_t nonsharedtimer;
+static int32_t nonsharedtimer;
 void nonsharedkeys(void)
 {
     short i,ch;
@@ -8039,8 +8037,8 @@ void findGRPToUse(char * groupfilefullpath){
     while ((dirEntry = readdir(dir)) != NULL)
     {
         
-#ifdef __linux__
-        if (dukeGRP_Match(dirEntry->d_name, _D_EXACT_NAMLEN(dirEntry)))
+#if defined(__linux__) || defined(__EMSCRIPTEN__)
+        if (dukeGRP_Match(dirEntry->d_name, strlen(dirEntry->d_name)))
 #else
         if (dukeGRP_Match(dirEntry->d_name,dirEntry->d_namlen))
 #endif
@@ -8105,7 +8103,7 @@ int main(int argc,char  **argv)
 	
 	printf("*** Chocolate DukeNukem3D v%d.%d ***\n\n", CHOCOLATE_DUKE_REV_X, CHOCOLATE_DUKE_REV_DOT_Y);
 
-    for (int i = 0; i < argc; ++i)
+    for (i = 0; i < argc; ++i)
         printf("ARG %d: %s\n", i, argv[i]);
 
 	// FIX_00033: Fake multi and AI are now fully working
@@ -8195,7 +8193,7 @@ int main(int argc,char  **argv)
 	}
 
 	// computing exe crc
-	ud.exeCRC[0] = 0;
+	/*ud.exeCRC[0] = 0;
 	exe = NULL;
 	filehandle = open(argv[0],O_BINARY|O_RDONLY);
 	if(filehandle!=-1)
@@ -8208,7 +8206,7 @@ int main(int argc,char  **argv)
 			free(exe);
 		}
 		close(filehandle);
-	}
+	}*/
 
 
 	checkcommandline(argc,argv);

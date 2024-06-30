@@ -17,6 +17,19 @@
 #include <string.h>
 #include <ctype.h>
 
+uint32_t sounddebugActiveSounds = 0;
+uint32_t sounddebugAllocateSoundCalls = 0;
+uint32_t sounddebugDeallocateSoundCalls = 0;
+
+int g_CV_CubicInterpolation = 0;
+int g_CV_console_text_color = 0;
+int g_CV_num_console_lines = 0;
+int g_CV_classic = 0;
+int g_CV_TransConsole = 0;
+int g_CV_DebugJoystick = 0;
+int g_CV_DebugSound = 0;
+int g_CV_DebugFileAccess = 0;
+
 // Bind our Cvars at startup. You can still add bindings after this call, but
 // it is recommanded that you bind your default CVars here.
 void CVARDEFS_Init()
@@ -40,9 +53,6 @@ void CVARDEFS_Init()
     g_CV_DebugJoystick = 0;
     REGCONVAR("DebugJoystick", " - Displays info on the active Joystick", g_CV_DebugJoystick, CVARDEFS_DefaultFunction);
 
-	sounddebugActiveSounds = 0;
-	sounddebugAllocateSoundCalls = 0;
-	sounddebugDeallocateSoundCalls = 0;
 	g_CV_DebugSound = 0;
     REGCONVAR("DebugSound", " - Displays info on the active Sounds", g_CV_DebugSound, CVARDEFS_DefaultFunction);
 

@@ -316,9 +316,9 @@ struct animwalltype
 extern struct animwalltype animwall[MAXANIMWALLS];
 extern short numanimwalls,probey,lastprobey;
 
-char  *mymembuf;
+extern char  *mymembuf;
 extern uint8_t  typebuflen;
-char typebuf[41];
+extern char typebuf[41];
 extern uint8_t  MusicPtr[72000];
 extern int32_t msx[2048],msy[2048];
 extern short cyclers[MAXCYCLERS][6],numcyclers;
@@ -576,11 +576,10 @@ extern char  skill_names[5][33];
 extern char  level_file_names[44][128];
 
 extern int32 SoundToggle,MusicToggle;
-extern short last_threehundred,lastsavedpos;
+extern short lastsavedpos;
 extern uint8_t  restorepalette;
 
 extern short buttonstat;
-extern int32_t cachecount;
 extern uint8_t  waterpal[768],slimepal[768],titlepal[768],drealms[768],endingpal[768];
 extern char boardfilename[128];
 extern uint8_t  betaname[80];

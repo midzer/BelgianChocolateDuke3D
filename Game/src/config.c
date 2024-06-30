@@ -49,23 +49,23 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 //
 // Sound variables
 //
-int32 FXDevice;
-int32 MusicDevice;
-int32 FXVolume;
-int32 MusicVolume;
-int32 SoundToggle;
-int32 MusicToggle;
-int32 VoiceToggle;
-int32 AmbienceToggle;
-int32 OpponentSoundToggle; // xduke to toggle opponent's sounds on/off in DM (duke 1.3d scheme)
-int32 NumVoices;
-int32 NumChannels;
-int32 NumBits;
-int32 MixRate;
-int32 MidiPort;
-int32 ReverseStereo;
+int32 FXDevice = 0;
+int32 MusicDevice = 0;
+int32 FXVolume = 0;
+int32 MusicVolume = 0;
+int32 SoundToggle = 0;
+int32 MusicToggle = 0;
+int32 VoiceToggle = 0;
+int32 AmbienceToggle = 0;
+int32 OpponentSoundToggle = 0; // xduke to toggle opponent's sounds on/off in DM (duke 1.3d scheme)
+int32 NumVoices = 0;
+int32 NumChannels = 0;
+int32 NumBits = 0;
+int32 MixRate = 0;
+int32 MidiPort = 0;
+int32 ReverseStereo = 0;
 
-int32 ControllerType;
+int32 ControllerType = 0;
 int32 MouseAiming = 0;
 int32 FullScreen = 0;
 
@@ -79,8 +79,8 @@ int32 ScreenHeight = 480;
 //
 // Mouse variables
 //
-int32 mouseSensitivity_X;
-int32 mouseSensitivity_Y;
+int32 mouseSensitivity_X = 0;
+int32 mouseSensitivity_Y = 0;
 
 static char  setupfilename[512];//={SETUPFILENAME};
 static int32 scripthandle;

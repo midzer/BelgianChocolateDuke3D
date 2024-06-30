@@ -41,7 +41,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 
 #define LOUDESTVOLUME 150
 
-int32_t backflag,numenvsnds;
+int32_t backflag,numenvsnds = 0;
 
 /*
 ===================

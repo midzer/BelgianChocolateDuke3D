@@ -99,7 +99,7 @@ typedef struct VoiceNode
    playbackstatus ( *GetSound )( struct VoiceNode *voice );
 
    void ( *mix )( uint32_t position, uint32_t rate,
-      uint8_t *start, uint32_t length );
+      const uint8_t *start, uint32_t length );
 
    uint8_t      *NextBlock;
    uint8_t      *LoopStart;

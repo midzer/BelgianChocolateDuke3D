@@ -1,22 +1,5 @@
 #include "multivoc.h"
-
-extern char  *MV_MixDestination;
-extern uint32_t MV_MixPosition;
-extern int *MV_GLast, *MV_GPos, *MV_GVal;
-
-extern int MV_LeftVolume;
-extern int MV_RightVolume;
-extern int MV_MaxVolume;
-
-// extern unsigned char *MV_HarshClipTable;
-
-extern int MV_RightChannelOffset;
-extern int MV_SampleSize;
-extern int MV_Channels;
-
-//int do_cubic = 1;
-
-extern int g_CV_CubicInterpolation;
+#include "../cvar_defs.h"
 
 #define do_cubic (g_CV_CubicInterpolation)
 

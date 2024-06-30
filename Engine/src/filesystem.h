@@ -14,7 +14,7 @@
 
 #define MAXGROUPFILES 4     /* Warning: Fix groupfil if this is changed */
 
-
+extern char game_dir[512];
 extern int32_t groupefil_crc32[MAXGROUPFILES];
 
 int32_t  initgroupfile(const char  *filename);

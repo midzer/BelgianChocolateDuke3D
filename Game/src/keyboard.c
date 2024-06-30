@@ -26,6 +26,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 
 #include <stdio.h>
 #include <string.h>
+#include <SDL2/SDL.h>
 
 #include "duke3d.h"
 #include "control.h"
@@ -40,8 +41,8 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 =============================================================================
 */
 
-byte  KB_KeyDown[ MAXKEYBOARDSCAN ];   // Keyboard state array
-kb_scancode KB_LastScan;
+byte  KB_KeyDown[ MAXKEYBOARDSCAN ] = {};   // Keyboard state array
+kb_scancode KB_LastScan = 0;
 
 static volatile boolean keyIsWaiting = 0;
 
@@ -112,6 +113,7 @@ void KB_KeyEvent( int scancode, int keypressed )
 int KB_KeyWaiting( void )
 {
     _handle_events();
+    SDL_Delay(1);
     return keyIsWaiting;
 }
 

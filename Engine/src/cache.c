@@ -58,8 +58,8 @@ typedef struct {
     uint8_t  *lock; } 
 cactype;
 
-cactype cac[MAXCACHEOBJECTS];
-int32_t lockrecip[200];
+cactype cac[MAXCACHEOBJECTS] = {};
+int32_t lockrecip[200] = {};
 
 // TC game directory
 char  game_dir[512] = { '\0' };

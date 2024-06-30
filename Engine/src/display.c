@@ -13,6 +13,8 @@
  * See the included license file "BUILDLIC.TXT" for license info.
  * This file IS NOT A PART OF Ken Silverman's original release
  */
+#define ENGINE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -51,16 +53,6 @@
 
 #define UNLOCK_SURFACE_AND_RETURN  if (SDL_MUSTLOCK(surface)) SDL_UnlockSurface(surface); return;
 
-
-	/* !!! move these elsewhere? */
-int32_t xres, yres, bytesperline, imageSize, maxpages;
-uint8_t* frameplace;
-
-//The frambuffer address
-uint8_t* frameoffset;
-uint8_t  *screen, vesachecked;
-int32_t buffermode, origbuffermode, linearmode;
-uint8_t  permanentupdate = 0, vgacompatible;
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
@@ -113,11 +105,7 @@ static void init_new_res_vars()
 
 	numpages = 1; // we always expose the same surface to the drawing engine.
 	bytesperline = surface->w;
-	vesachecked = 1;
-	vgacompatible = 1;
-	linearmode = 1;
 	qsetmode = surface->h;
-	activepage = visualpage = 0;
 
 
 	frameoffset = frameplace = (uint8_t*)surface->pixels;
@@ -988,7 +976,6 @@ void getvalidvesamodes(void)
 	output_vesa_modelist();
 } 
 
-uint8_t lastPalette[768];
 void WriteTranslucToFile(void)
 {
 	uint8_t buffer[65535*4];
@@ -1163,7 +1150,7 @@ int setupmouse(void)
 	moustat = 1;
 
 	// FIX_00063: Duke's angle changing or incorrect when using toggle fullscreen/window mode
-	while(SDL_PollEvent(&event)); // Empying the various pending events (especially the mouse one)
+	//while(SDL_PollEvent(&event)); // Empying the various pending events (especially the mouse one)
 
 	//SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 

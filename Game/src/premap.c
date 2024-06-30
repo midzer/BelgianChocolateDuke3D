@@ -26,6 +26,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 
 #include <stdlib.h>
 #include <string.h>
+#include <SDL2/SDL.h>
 
 #include "duke3d.h"
 #include "audiolib/fx_man.h"
@@ -1001,8 +1002,11 @@ void newgame(uint8_t  vn,uint8_t  ln,uint8_t  sk)
     struct player_struct *p = &ps[0];
     short i;
 
-    if(globalskillsound >= 0)
-        while(Sound[globalskillsound].lock>=200);
+    if(globalskillsound >= 0) {
+        while(Sound[globalskillsound].lock>=200) {
+            SDL_Delay(1);
+        }
+    }
     globalskillsound = -1;
 
     waitforeverybody();

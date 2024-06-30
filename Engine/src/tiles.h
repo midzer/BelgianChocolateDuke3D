@@ -66,8 +66,6 @@ void setgotpic(int32_t tilenume);
 
 int animateoffs(int16_t tilenum);
 
-extern uint8_t  *pic ;
-
 void TILE_MakeAvailable(short picID);
 
 #endif

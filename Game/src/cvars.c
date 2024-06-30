@@ -6,7 +6,7 @@
 
 #define MAX_CVARS 32
 
-cvar_binding cvar_binding_list[MAX_CVARS];
+static cvar_binding cvar_binding_list[MAX_CVARS];
 int num_cvar_bindings = 0;
 
 void CVAR_RegisterCvar(const char * varname, const char * varhelp, void* variable, function_t function)
